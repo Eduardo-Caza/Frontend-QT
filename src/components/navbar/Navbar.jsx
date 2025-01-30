@@ -10,7 +10,7 @@ import ListIcon from '@mui/icons-material/List';
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-
+import profile from "../../assets/images/logo.jpg"
 
 const Navbar = () => {
     const {dispatch} = useContext(DarkModeContext)
@@ -22,10 +22,6 @@ const Navbar = () => {
                     <SearchIcon/> */}
                 </div>
                 <div className="items">
-                    <div className="item">
-                        <LanguageIcon className="icon"/>
-                        Español
-                    </div>
                     <div className="item">
                         <DarkModeOutlinedIcon className="icon" onClick={() => dispatch({ type: "TOGGLE" })}/>
                     </div>
@@ -41,11 +37,8 @@ const Navbar = () => {
                         <div className="counter">2</div>
                     </div> */}
                     <div className="item">
-                        <ListIcon className="icon"/>
-                    </div>
-                    <div className="item">
                         <Link to="/profile" style={{ textDecoration: "none" }}> 
-                            <img src="https://choicefineart.com/cdn/shop/products/portrait-series-bugs-bunny-983890.jpg?v=1688081893" alt="avatar" className="avatar"/>
+                            <img src={profile} alt="avatar" className="avatar"/>
                         </Link>
                     </div>
                 </div>

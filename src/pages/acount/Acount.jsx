@@ -6,6 +6,7 @@ import List from "../../components/table/Table";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // Para obtener el parámetro de la URL
 import axios from "axios";
+import profile from "../../assets/images/logo.jpg";
 
 const Acount = () => {
   const [moderador, setModerador] = useState(null); // Estado para los datos del moderador
@@ -53,7 +54,7 @@ const Acount = () => {
             <h1 className="title">Información del Moderador</h1>
             <div className="item">
               <img
-                src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
+                src={profile}
                 alt="Foto del Moderador"
                 className="itemImg"
               />

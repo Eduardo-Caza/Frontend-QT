@@ -3,7 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import profile from "../../assets/images/logo.jpg"
 const Profile = () => {
   const [moderador, setModerador] = useState(null); // Estado para los datos del moderador
   const [loading, setLoading] = useState(true); // Estado para el estado de carga
@@ -23,6 +23,7 @@ const Profile = () => {
           `${import.meta.env.VITE_BACKEND_URL}/administrador/moderador/${modId}`
         );
         setModerador(response.data); // Guardamos los datos del moderador
+        console.log(response.data)
       } catch (err) {
         console.error("Error fetching moderador data:", err);
         setError("No se pudo cargar la información del moderador.");
@@ -51,7 +52,7 @@ const Profile = () => {
           <h1 className="title">Información del Moderador</h1>
           <div className="profileDetails">
             <img
-              src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
+              src={profile}
               alt="Foto del Moderador"
               className="profileImg"
             />
@@ -61,7 +62,7 @@ const Profile = () => {
               <p className="info"><strong>Teléfono:</strong> {moderador.telefono}</p>
               <p className="info"><strong>Dirección:</strong> {moderador.direccion}</p>
               <p className="info"><strong>País:</strong> {moderador.pais}</p>
-              <p className="info"><strong>Rol:</strong> {moderador.role}</p>
+              <p className="info"><strong>Rol: Moderador</strong></p>
               <p className="info"><strong>Estado:</strong> {moderador.estado ? "Activo" : "Inactivo"}</p>
             </div>
           </div>

@@ -68,22 +68,18 @@ const Sidebar = () => {
                             <span>Usuarios</span>
                         </li>
                     </Link>
-                    <p className="title">USER</p>
+                    <p className="title">USUARIO</p>
                     <Link to="/profile" style={{ textDecoration: "none" }}>
                         <li>
                             <AccountCircleIcon className="icon" />
-                            <span>Profile</span>
+                            <span>Perfil</span>
                         </li>
                     </Link>
                     <li onClick={handleLogout}>
                         <LogoutIcon className="icon" />
-                        <span>Logout</span>
+                        <span>Salir</span>
                     </li>
                 </ul>
-            </div>
-            <div className="bottom">
-                <div className="colorOption" onClick={() => dispatch({ type: "LIGHT" })}></div>
-                <div className="colorOption" onClick={() => dispatch({ type: "DARK" })}></div>
             </div>
         </div>
     );
