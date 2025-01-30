@@ -11,7 +11,9 @@ import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress"; // Spinner para carga
 import { useParams } from "react-router-dom"; // Obtener ID de la URL
 import { Button } from "@mui/material";
-//Esta parte es para mostrar los productos por id de tienda
+import Swal from "sweetalert2"; // Importar SweetAlert2
+
+// Esta parte es para mostrar los productos por id de tienda
 const Listprod = () => {
   const { id } = useParams(); // Obtener el ID de la tienda desde la URL
   const [rows, setRows] = useState([]); // Estado para productos
@@ -47,16 +49,39 @@ const Listprod = () => {
 
   // Eliminar producto
   const handleDelete = async (productId) => {
-    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este producto?");
-    if (!confirmDelete) return;
+    // Usar SweetAlert2 para confirmar eliminación
+    const confirmDelete = await Swal.fire({
+      title: '¿Estás seguro de que deseas eliminar este producto?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'No, cancelar',
+    });
+
+    if (!confirmDelete.isConfirmed) return;
 
     try {
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/administrador/producto/${productId}`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/producto/${productId}`);
       setRows(rows.filter((row) => row._id !== productId));
-      alert("Producto eliminado con éxito");
+
+      // Mensaje de éxito con SweetAlert2
+      Swal.fire({
+        title: 'Producto eliminado',
+        text: 'El producto ha sido eliminado exitosamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
     } catch (error) {
       console.error("Error al eliminar el producto:", error);
-      alert("Hubo un error al eliminar el producto");
+
+      // Mensaje de error con SweetAlert2
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un error al eliminar el producto',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
     }
   };
 
