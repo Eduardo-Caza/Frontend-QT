@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 const Datatable = () => {
   const [data, setData] = useState([]);
 
+  // Función para listar los usuarios
   const listarUsuarios = async () => {
     try {
       const url = `${import.meta.env.VITE_BACKEND_URL}/administrador/listausuarios`;
@@ -17,7 +18,7 @@ const Datatable = () => {
           id: usuario._id,
           nombre: `${usuario.nombre} ${usuario.apellido}`,
           email: usuario.email,
-          estado: usuario.estado === "activo" ? "Activo" : "Inactivo",
+          estado: usuario.confirmEmail ? "Activo" : "Suspendido",
           propietario: usuario.propietario,
         }))
       );
@@ -30,33 +31,56 @@ const Datatable = () => {
     listarUsuarios();
   }, []);
 
-  const eliminarUsuario = async (idUsuario) => {
+  // Función para suspender el usuario
+  const suspenderUsuario = async (idUsuario) => {
     try {
       const url = `${import.meta.env.VITE_BACKEND_URL}/administrador/usuario/${idUsuario}`;
-      await axios.delete(url);
-      setData(data.filter((usuario) => usuario.id !== idUsuario));
+      const respuesta = await axios.put(url); // Esperamos la respuesta del backend
+
+      // Solo actualizamos el estado si la respuesta es exitosa
+      if (respuesta.status === 200) {
+        setData(data.map((usuario) =>
+          usuario.id === idUsuario
+            ? { ...usuario, estado: "Suspendido" }
+            : usuario
+        ));
+        Swal.fire("Suspendido!", "El usuario ha sido suspendido.", "success");
+      } else {
+        Swal.fire("Error", "No se pudo suspender al usuario", "error");
+      }
     } catch (error) {
-      console.error("Error al eliminar el usuario:", error);
+      console.error("Error al suspender el usuario:", error);
+      Swal.fire("Error", "Hubo un problema al suspender el usuario", "error");
     }
   };
 
-  const confirmarEliminacion = (idUsuario) => {
+  // Función para confirmar la suspensión antes de proceder
+  const confirmarSuspension = (idUsuario) => {
     Swal.fire({
-      title: "¿Desea realmente eliminar este usuario?",
+      title: "¿Desea realmente suspender este usuario?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, eliminar",
+      confirmButtonText: "Sí, suspender",
       cancelButtonText: "No, cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        eliminarUsuario(idUsuario);
-        Swal.fire("¡Eliminado!", "El usuario ha sido eliminado.", "success");
+        suspenderUsuario(idUsuario);
       }
     });
   };
 
+  // Columnas para la tabla
+  const columns = [
+    { field: "id", headerName: "ID de Usuario", width: 200 },
+    { field: "nombre", headerName: "Nombre", width: 300 },
+    { field: "email", headerName: "Correo Electrónico", width: 300 },
+    { field: "estado", headerName: "Estado", width: 150 }, // Ahora se muestra 'Activo' o 'Suspendido'
+    { field: "propietario", headerName: "Propietario", width: 200 },
+  ];
+
+  // Columna de acciones para suspender el usuario
   const actionColumn = [
     {
       field: "action",
@@ -69,29 +93,19 @@ const Datatable = () => {
           </Link>
           <div
             className="deleteButton"
-            onClick={() => confirmarEliminacion(params.row.id)}
+            onClick={() => confirmarSuspension(params.row.id)}
           >
-            Eliminar
+            Suspender
           </div>
         </div>
       ),
     },
   ];
 
-  const columns = [
-    { field: "id", headerName: "ID de Usuario", width: 200 },
-    { field: "nombre", headerName: "Nombre", width: 300 },
-    { field: "email", headerName: "Correo Electrónico", width: 300 },
-    { field: "propietario", headerName: "Propietario", width: 200 },
-  ];
-
   return (
     <div className="datatable">
       <div className="datatableTitle">
         Usuarios Registrados
-        {/* <Link to="/users/newu" className="link">
-          Agregar Nuevo
-        </Link> */}
       </div>
       <DataGrid
         className="datagrid"
